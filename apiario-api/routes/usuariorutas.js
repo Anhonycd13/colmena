@@ -3,22 +3,14 @@ import usuarioController from "../controller/usuarioController.js"; // Asegúrat
 
 const router = Router();
 
-// Ruta para obtener la lista de usuarios
-router
-    .route('/lista')
+router.route('/lista')
     .get(usuarioController.getUsuarios);
 
-// Ruta para crear un nuevo usuario
-router
-    .route('/usuario')
-    .post(usuarioController.createUsuario);
+router.route('/usuario')
+    .post(usuarioController.createUsuario); // Cambia createUsuarios por createUsuario
 
-// Ruta para registrar un nuevo usuario (sign up)
-router
-    .post('/signup', usuarioController.signUp);
+router.post('/signup', usuarioController.signUp); // Registro de usuario
 
-// Ruta para iniciar sesión (sign in)
-router
-    .post('/signin', usuarioController.signIn);
+router.post('/signin', usuarioController.signIn); // Inicio de sesión de usuario
 
 export default router;

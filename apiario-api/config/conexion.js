@@ -25,19 +25,21 @@ import { Sequelize } from 'sequelize';
 import tedious from 'tedious';
 
 const sequelize = new Sequelize('ColmenaB2', 'sa', 'admin1234', {
-    //host: '192.168.225.160\\SQLEXPRESS', // Dirección IP del servidor SQL
-       host: '192.168.0.101\\SQLEXPRESS', // Ejemplo: '192.168.0.101\\SQLEXPRESS'
-        dialect: 'mssql',
-        dialectModule: tedious,
-        dialectOptions: {
-            options: {
-                encrypt: false,
-                trustServerCertificate: true
-            }
+    //host: '192.168.0.101',
+   // host: '192.168.225.160',
+   host: '192.168.0.105',
+    dialect: 'mssql',
+    dialectModule: tedious,
+    port: 1433,  // Puerto predeterminado para SQL Server
+    dialectOptions: {
+        options: {
+            encrypt: false,  // Cambia a true si usas cifrado
+            trustServerCertificate: true  // Cambia a false si no deseas confiar en el certificado
         }
-    });
-    
+    }
+});
 
 export default sequelize;
+
 
 

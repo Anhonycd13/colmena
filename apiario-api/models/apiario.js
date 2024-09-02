@@ -6,52 +6,37 @@ const Apiario = sequelize.define('Apiario', {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+        field: 'id_apiario'
     },
     Descripcion: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        field: 'descripcion'
     },
     municipio: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        field: 'Municipio'
     },
     direccion: {
         type: DataTypes.STRING(255),
-        allowNull: false
-    },
-    id_persona: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'persona',
-            key: 'id_persona'
-        }
+        field: 'Direccion'
     },
     Nombre: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        field: 'nombre'
     },
     Estado: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true
+        field: 'estado'
     },
     contraseña_hash: {
-        type: DataTypes.BLOB, // Asumiendo que 'contraseña_hash' es binario
-        allowNull: false
-    },
-    id_usuario: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'usuario', // Asegúrate de que el modelo 'Usuario' está definido
-            key: 'id_usuario'
-        }
+        type: DataTypes.BLOB, // Mantén BLOB para datos binarios
+        field: 'contraseña_hash'
     }
 }, {
     tableName: 'Apiario',
-    timestamps: false
+    timestamps: false,
+    schema: 'dbo'
 });
 
 export default Apiario;

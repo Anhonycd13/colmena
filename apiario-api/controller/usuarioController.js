@@ -15,7 +15,7 @@ const usuarioController = {
     },
 
     createUsuario: async (req, res) => {
-        const { correo, contraseña, nombre, rol, tipo } = req.body;
+        const { correo, contraseña, nombre, rol, tipo, idApiario } = req.body;
 
         if (!correo || !contraseña || !nombre || !rol || tipo == null) {
             return res.status(400).json({ message: "Todos los campos son requeridos" });
@@ -30,7 +30,8 @@ const usuarioController = {
                 contraseña_hash: Buffer.from(contraseña_hash),
                 nombre,
                 rol,
-                tipo
+                tipo,
+                idApiario
             });
 
             res.status(201).json(nuevoUsuario);
@@ -78,9 +79,9 @@ const usuarioController = {
     },
 
     signUp: async (req, res) => {
-        const { correo, contraseña, nombre, apellido, cargo, telefono, correoElectronico, estado, rol } = req.body;
+        const { correo, contraseña, nombre, rol, tipo, idApiario } = req.body;
 
-        if (!correo || !contraseña || !nombre || !apellido || !cargo || !telefono || !correoElectronico || !estado || !rol) {
+        if (!correo || !contraseña || !nombre || !rol || tipo == null) {
             return res.status(400).json({ message: 'Todos los campos son requeridos' });
         }
 
@@ -92,12 +93,9 @@ const usuarioController = {
                 correo,
                 contraseña_hash: Buffer.from(contraseña_hash),
                 nombre,
-                apellido,
-                cargo,
-                telefono,
-                correoElectronico,
-                estado,
-                rol
+                rol,
+                tipo,
+                idApiario
             });
 
             res.status(201).json({ message: 'Usuario registrado con éxito', nuevoUsuario });

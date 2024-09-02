@@ -1,47 +1,46 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/conexion.js'; // Asegúrate de que esta ruta sea correcta según tu estructura de carpetas
+import sequelize from '../config/conexion.js';
 
 const Persona = sequelize.define('Persona', {
-    id_persona: {
+    idPersona: {                                        
         type: DataTypes.INTEGER,
-        primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+        primaryKey: true,
+        field: 'id_persona'        
     },
     dpi: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true // asumiendo que este campo es único
+        field: 'Dpi' 
     },
     Telefono: {
-        type: DataTypes.DECIMAL(18, 0), // Según la descripción: numeric(9,18) que significa 18 dígitos
-        allowNull: false
+        type: DataTypes.NUMERIC(18, 0),
+        field: 'Telefono' 
     },
     Correo: {
-        type: DataTypes.STRING(255), // varchar(255)
-        allowNull: false,
-        unique: true, // asumiendo que el correo debe ser único
+        type: DataTypes.STRING(255),
+        field: 'Correo' 
     },
     NIT: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true // asumiendo que este campo también es único
+        field: 'NIT' 
     },
     direccion: {
-        type: DataTypes.STRING(255), // varchar(255)
-        allowNull: false
+        type: DataTypes.STRING(255),
+        field: 'Direccion' 
     },
     nombre: {
-        type: DataTypes.STRING(255), // varchar(255)
-        allowNull: false
+        type: DataTypes.STRING(255),
+        field: 'Nombre' 
     },
     apellido: {
-        type: DataTypes.STRING(255), // varchar(255)
-        allowNull: false
+        type: DataTypes.STRING(255),
+        field: 'Apellido' 
     }
 }, {
+    
+    timestamps: false,
     tableName: 'Persona',
-    timestamps: false
+    schema: 'dbo'
 });
 
 export default Persona;

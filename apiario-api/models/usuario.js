@@ -27,6 +27,10 @@ const Usuario = sequelize.define('Usuario', {
     tipo: {
         type: DataTypes.INTEGER, // Utiliza INTEGER para int
         field: 'Tipo'
+    },
+    idApiario: {
+        type: DataTypes.INTEGER,
+        field: 'id_apiario'
     }
 }, {
     timestamps: false,

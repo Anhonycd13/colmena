@@ -30,10 +30,21 @@ export const obtenerInventarios = async (req, res) => {
 };
 
 // Obtener un registro de inventario por ID
+// controllers/inventarioController.js
+// controllers/inventarioController.js
+// controllers/inventarioController.js
+// controllers/inventarioController.js
 export const obtenerInventarioPorId = async (req, res) => {
     const { id } = req.params;
     try {
-        const inventario = await Inventario.findByPk(id);
+        let inventario;
+        if (id === 'personas') {
+            inventario = await Inventario.findAll();
+        } else if (isNaN(id)) {
+            inventario = await Inventario.findOne({ where: { id_inventario: id } });
+        } else {
+            inventario = await Inventario.findByPk(id);
+        }
         if (inventario) {
             res.status(200).json(inventario);
         } else {
@@ -43,7 +54,6 @@ export const obtenerInventarioPorId = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener el inventario' });
     }
 };
-
 // Actualizar un registro de inventario por ID
 export const actualizarInventario = async (req, res) => {
     const { id } = req.params;

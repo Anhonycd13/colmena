@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/conexion.js';
+import Apiario from './apiario.js'; // Importa aquí
 
 const Usuario = sequelize.define('Usuario', {
     idUsuario: {
@@ -13,7 +14,7 @@ const Usuario = sequelize.define('Usuario', {
         field: 'Correo'
     },
     contraseña_hash: {
-        type: DataTypes.BLOB, // Utiliza BLOB para varbinary
+        type: DataTypes.BLOB,
         field: 'contraseña_hash'
     },
     nombre: {
@@ -25,7 +26,7 @@ const Usuario = sequelize.define('Usuario', {
         field: 'rol'
     },
     tipo: {
-        type: DataTypes.INTEGER, // Utiliza INTEGER para int
+        type: DataTypes.INTEGER,
         field: 'Tipo'
     },
     idApiario: {
@@ -35,7 +36,13 @@ const Usuario = sequelize.define('Usuario', {
 }, {
     timestamps: false,
     tableName: 'Usuario',
-    schema: 'dbo'  // Usa el nombre correcto del esquema
+    schema: 'dbo'
+});
+
+// Definir la relación aquí
+Usuario.belongsTo(Apiario, {
+    foreignKey: 'idApiario',
+    targetKey: 'id_apiario'
 });
 
 export default Usuario;

@@ -3,10 +3,10 @@ import usuarioController from "../controller/usuarioController.js"; // Asegúrat
 
 const router = Router();
 
-router.route('/lista')
+router.route('/')
     .get(usuarioController.getUsuarios);
 
-router.route('/usuario')
+router.route('/')
     .post(usuarioController.createUsuario); // Cambia createUsuarios por createUsuario
 
 router.post('/signup', usuarioController.signUp); // Registro de usuario

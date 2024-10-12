@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import Usuario from '../models/usuario.js';
+import Apiario from '../models/apiario.js';
 import jwt from 'jsonwebtoken';
 import palsecret from '../palsecret.js'; // Asegúrate de que este archivo exporte correctamente la clave secreta
 
@@ -43,41 +44,52 @@ const usuarioController = {
 
     signIn: async (req, res) => {
         const { correo, contraseña } = req.body;
-
+    
         if (!correo || !contraseña) {
             return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
         }
-
+    
         try {
-            const user = await Usuario.findOne({ where: { correo } });
-
+            const user = await Usuario.findOne({
+                where: { correo },
+                include: [{ model: Apiario, attributes: ['id_apiario', 'Nombre'] }] // Incluir id y nombre del apiario
+            });
+    
             if (!user) {
                 return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
             }
-
+    
             // Convertir el Buffer a string
-            const contraseñaHash = user.contraseña_hash.toString('utf-8'); 
-
+            const contraseñaHash = user.contraseña_hash.toString('utf-8');
+    
             // Verificar la contraseña
             if (!bcrypt.compareSync(contraseña, contraseñaHash)) {
                 return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
             }
-
+    
             const roles = [user.rol]; // Suponiendo que el rol está en la tabla de usuarios
-
+            const id_apiario = user.Apiario?.id_apiario; // Obtener id_apiario del apiario asociado
+            const nombre = user.Apiario?.Nombre; // Obtener nombre del apiario asociado
+    
+            // Generar el token con id, roles, id_apiario y nombre_apiario
             const token = jwt.sign(
-                { id: user.idUsuario, roles },
+                { id: user.idUsuario, roles, id_apiario, nombre },
                 palsecret.SECRET, // Asegúrate de que palsecret tenga la propiedad SECRET
                 { expiresIn: '1h' }
             );
-
-            res.json({ token, roles });
+    
+            // Respuesta con el token, roles, id_apiario y nombre del apiario
+            res.json({
+                token,
+                roles,
+                id_apiario,
+                nombre
+            });
         } catch (error) {
             console.error('Error en el inicio de sesión:', error);
             res.status(500).send('Error interno del servidor');
         }
     },
-
     signUp: async (req, res) => {
         const { correo, contraseña, nombre, rol, tipo, idApiario } = req.body;
 

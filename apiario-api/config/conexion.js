@@ -27,7 +27,7 @@ import tedious from 'tedious';
 const sequelize = new Sequelize('ColmenaB2', 'sa', 'admin1234', {
     //host: '192.168.0.101',
     //host: '192.168.225.160',
-   host: '192.168.0.109',
+   host: '192.168.0.107',
     dialect: 'mssql',
     dialectModule: tedious,
     port: 1433,  // Puerto predeterminado para SQL Server

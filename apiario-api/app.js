@@ -9,11 +9,11 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/listav1', usuarioRutas); // Rutas bajo el prefijo '/listav1'
-app.use('/listav1', inventarioRutas);
-app.use('/listav1', personasRutas);
-app.use('/listav1', apiarioRutas);
-app.use('/listav1', productorutas);
+app.use('/listav1/usuarios', usuarioRutas); // Rutas bajo el prefijo '/listav1'
+app.use('/listav1/inventarios', inventarioRutas);
+app.use('/listav1/personas', personasRutas);
+app.use('/listav1/apiarios', apiarioRutas);
+app.use('/listav1/productos', productorutas);
 
 const PUERTO = process.env.PUERTO || 3000;
 

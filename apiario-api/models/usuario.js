@@ -41,7 +41,7 @@ const Usuario = sequelize.define('Usuario', {
 
 // Definir la relación aquí
 Usuario.belongsTo(Apiario, {
-    foreignKey: 'idApiario',
+    foreignKey: 'id_apiario',
     targetKey: 'id_apiario'
 });
 

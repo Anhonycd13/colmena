@@ -16,7 +16,7 @@ const usuarioController = {
     },
 
     createUsuario: async (req, res) => {
-        const { correo, contraseña, nombre, rol, tipo, idApiario } = req.body;
+        const { correo, contraseña, nombre, rol, tipo, id_apiario } = req.body;
 
         if (!correo || !contraseña || !nombre || !rol || tipo == null) {
             return res.status(400).json({ message: "Todos los campos son requeridos" });
@@ -32,7 +32,7 @@ const usuarioController = {
                 nombre,
                 rol,
                 tipo,
-                idApiario
+                id_apiario
             });
 
             res.status(201).json(nuevoUsuario);
@@ -91,7 +91,7 @@ const usuarioController = {
         }
     },
     signUp: async (req, res) => {
-        const { correo, contraseña, nombre, rol, tipo, idApiario } = req.body;
+        const { correo, contraseña, nombre, rol, tipo, id_apiario } = req.body;
 
         if (!correo || !contraseña || !nombre || !rol || tipo == null) {
             return res.status(400).json({ message: 'Todos los campos son requeridos' });
@@ -107,7 +107,7 @@ const usuarioController = {
                 nombre,
                 rol,
                 tipo,
-                idApiario
+                id_apiario
             });
 
             res.status(201).json({ message: 'Usuario registrado con éxito', nuevoUsuario });

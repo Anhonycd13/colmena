@@ -8,10 +8,6 @@ const Producto = sequelize.define('Producto', {
     autoIncrement: true,
     field: 'id_Producto'
   },
-  id_inventario: {
-    type: DataTypes.INTEGER,
-    field: 'id_inventario'
-  },
   Nombre: {
     type: DataTypes.STRING(255),
     field: 'Nombre'
@@ -27,11 +23,16 @@ const Producto = sequelize.define('Producto', {
   id_apiario: {
     type: DataTypes.INTEGER,
     field: 'id_apiario'
+  },
+  Fecha: {
+    type: DataTypes.DATE,
+    field: 'Fecha'
   }
 }, {
   tableName: 'Producto',
-  timestamps: false, // Asume que no tienes campos de timestamp en tu tabla
+  timestamps: false,
   schema: 'dbo'
 });
+
 
 export default Producto;

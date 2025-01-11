@@ -27,8 +27,8 @@ export const getProductoById = async (req, res) => {
 // Crear un nuevo producto
 export const createProducto = async (req, res) => {
   try {
-    const { id_inventario, Nombre, Precio, Stock, id_apiario } = req.body;
-    const nuevoProducto = await Producto.create({ id_inventario, Nombre, Precio, Stock, id_apiario });
+    const { id_inventario, Nombre, Precio, Stock, id_apiario, Fecha } = req.body;
+    const nuevoProducto = await Producto.create({ id_inventario, Nombre, Precio, Stock, id_apiario, Fecha });
     res.status(201).json(nuevoProducto);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -40,8 +40,8 @@ export const updateProducto = async (req, res) => {
   try {
     const producto = await Producto.findByPk(req.params.id);
     if (producto) {
-      const { id_inventario, Nombre, Precio, Stock, id_apiario } = req.body;
-      await producto.update({ id_inventario, Nombre, Precio, Stock, id_apiario });
+      const { id_inventario, Nombre, Precio, Stock, id_apiario, Fecha } = req.body;
+      await producto.update({ id_inventario, Nombre, Precio, Stock, id_apiario, Fecha });
       res.json(producto);
     } else {
       res.status(404).json({ message: 'Producto no encontrado' });

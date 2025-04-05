@@ -24,10 +24,10 @@ export default sequelize;*/
 import { Sequelize } from 'sequelize';
 import tedious from 'tedious';
 
-const sequelize = new Sequelize('ColmenaB2', 'sa', 'admin1234', {
+const sequelize = new Sequelize('ColmenaB2', 'sa', 'admin123', {
     //host: '192.168.0.101',
     //host: '192.168.165.160',
-   host: '192.168.0.108',
+   host: '192.168.0.102',
     dialect: 'mssql',
     dialectModule: tedious,
     port: 1433,  // Puerto predeterminado para SQL Server

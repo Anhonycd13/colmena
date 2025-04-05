@@ -2,94 +2,25 @@ import bcrypt from 'bcrypt';
 import Usuario from '../models/usuario.js';
 import Apiario from '../models/apiario.js';
 import jwt from 'jsonwebtoken';
-import palsecret from '../palsecret.js'; // Asegúrate de que este archivo exporte correctamente la clave secreta
+import palsecret from '../palsecret.js';
+import { verifyToken } from '../middlewares/verificarApiario.js'; // Middleware de autenticación
 
 const usuarioController = {
-    getUsuarios: async (req, res) => {
-        try {
-            const usuarios = await Usuario.findAll();
-            return res.status(200).json(usuarios);
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({ error: 'Ocurrió un error al obtener la lista de usuarios', detalles: error.message });
-        }
-    },
-
-    createUsuario: async (req, res) => {
-        const { correo, contraseña, nombre, rol, tipo, id_apiario } = req.body;
-
-        if (!correo || !contraseña || !nombre || !rol || tipo == null) {
-            return res.status(400).json({ message: "Todos los campos son requeridos" });
-        }
-
-        try {
-            const saltRounds = 10;
-            const contraseña_hash = await bcrypt.hash(contraseña, saltRounds);
-
-            const nuevoUsuario = await Usuario.create({
-                correo,
-                contraseña_hash: Buffer.from(contraseña_hash),
-                nombre,
-                rol,
-                tipo,
-                id_apiario
-            });
-
-            res.status(201).json(nuevoUsuario);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: "Error al crear el usuario", error });
-        }
-    },
-
-    signIn: async (req, res) => {
-        const { correo, contraseña } = req.body;
-    
-        if (!correo || !contraseña) {
-            return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
-        }
-    
-        try {
-            const user = await Usuario.findOne({
-                where: { correo },
-                include: [{ model: Apiario, attributes: ['id_apiario', 'Nombre'] }] // Incluir id y nombre del apiario
-            });
-    
-            if (!user) {
-                return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
+    // Obtener todos los usuarios (solo Admin puede acceder)
+    getUsuarios: [
+        verifyToken(['Administrador']),  // Middleware para restringir acceso solo a Administradores
+        async (req, res) => {
+            try {
+                const usuarios = await Usuario.findAll();
+                return res.status(200).json(usuarios);
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ error: 'Ocurrió un error al obtener la lista de usuarios', detalles: error.message });
             }
-    
-            // Convertir el Buffer a string
-            const contraseñaHash = user.contraseña_hash.toString('utf-8');
-    
-            // Verificar la contraseña
-            if (!bcrypt.compareSync(contraseña, contraseñaHash)) {
-                return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
-            }
-    
-            const roles = [user.rol]; // Suponiendo que el rol está en la tabla de usuarios
-            const id_apiario = user.Apiario?.id_apiario; // Obtener id_apiario del apiario asociado
-            const nombre = user.Apiario?.Nombre; // Obtener nombre del apiario asociado
-    
-            // Generar el token con id, roles, id_apiario y nombre_apiario
-            const token = jwt.sign(
-                { id: user.idUsuario, roles, id_apiario, nombre },
-                palsecret.SECRET, // Asegúrate de que palsecret tenga la propiedad SECRET
-                { expiresIn: '1h' }
-            );
-    
-            // Respuesta con el token, roles, id_apiario y nombre del apiario
-            res.json({
-                token,
-                roles,
-                id_apiario,
-                nombre
-            });
-        } catch (error) {
-            console.error('Error en el inicio de sesión:', error);
-            res.status(500).send('Error interno del servidor');
         }
-    },
+    ],
+
+    // Registrar un usuario (accesible sin autenticación)
     signUp: async (req, res) => {
         const { correo, contraseña, nombre, rol, tipo, id_apiario } = req.body;
 
@@ -115,7 +46,62 @@ const usuarioController = {
             console.error('Error en el registro:', error);
             res.status(500).send('Error interno del servidor');
         }
-    }
+    },
+
+    // Inicio de sesión
+    signIn: async (req, res) => {
+        const { correo, contraseña } = req.body;
+
+        if (!correo || !contraseña) {
+            return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
+        }
+
+        try {
+            const user = await Usuario.findOne({
+                where: { correo },
+                include: [{ model: Apiario, attributes: ['id_apiario', 'Nombre'] }] // Incluir id y nombre del apiario
+            });
+
+            if (!user) {
+                return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
+            }
+
+            const contraseñaHash = user.contraseña_hash.toString('utf-8');
+            if (!bcrypt.compareSync(contraseña, contraseñaHash)) {
+                return res.status(401).json({ message: 'Correo o contraseña incorrectos' });
+            }
+
+            const roles = [user.rol]; 
+            const id_apiario = user.Apiario?.id_apiario; 
+            const nombre = user.Apiario?.Nombre;
+
+            const token = jwt.sign(
+                { id: user.idUsuario, roles, id_apiario, nombre },
+                palsecret.SECRET,
+                { expiresIn: '1h' }
+            );
+
+            res.json({ token, roles, id_apiario, nombre });
+        } catch (error) {
+            console.error('Error en el inicio de sesión:', error);
+            res.status(500).send('Error interno del servidor');
+        }
+    },
+
+    // Rutas protegidas para Admin y Empleados
+    adminDashboard: [
+        verifyToken(['Administrador']),
+        (req, res) => {
+            res.json({ message: 'Bienvenido Administrador' });
+        }
+    ],
+    
+    empleadoDashboard: [
+        verifyToken(['Empleado', 'Administrador']),
+        (req, res) => {
+            res.json({ message: 'Bienvenido Empleado' });
+        }
+    ]
 };
 
 export default usuarioController;

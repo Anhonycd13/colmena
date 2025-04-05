@@ -27,7 +27,12 @@ export const getProductoById = async (req, res) => {
 // Crear un nuevo producto
 export const createProducto = async (req, res) => {
   try {
+    console.log("Datos recibidos:", req.body);
     const { id_inventario, Nombre, Precio, Stock, id_apiario, Fecha } = req.body;
+    if (!Fecha) {
+      return res.status(400).json({ message: "La fecha no fue ingresada" });
+    }
+
     const nuevoProducto = await Producto.create({ id_inventario, Nombre, Precio, Stock, id_apiario, Fecha });
     res.status(201).json(nuevoProducto);
   } catch (error) {
